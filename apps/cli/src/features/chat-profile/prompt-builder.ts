@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const DEFAULT_PROMPT_TEMPLATE_PATH = join(
-  dirname(dirname(dirname(fileURLToPath(import.meta.url)))),
+  dirname(dirname(dirname(dirname(fileURLToPath(import.meta.url))))),
   "prompts",
   "chat_profile_analysis.md",
 );

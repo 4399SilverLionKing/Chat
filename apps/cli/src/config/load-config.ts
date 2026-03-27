@@ -59,6 +59,7 @@ export async function loadConfig(configPath: string) {
     storage: {
       ...config.storage,
       profileDir: resolvePath(config.storage.profileDir, projectRoot),
+      replyDir: resolvePath(config.storage.replyDir, projectRoot),
       sanitizedChatDir: resolvePath(config.storage.sanitizedChatDir, projectRoot),
     },
   };

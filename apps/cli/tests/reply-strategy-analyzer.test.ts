@@ -37,6 +37,9 @@ describe("ReplyStrategyAnalyzer", () => {
       run: vi.fn().mockResolvedValue("## 当前局面判断"),
     };
     const buildPrompt = vi.fn().mockResolvedValue("prompt");
+    const saveReplyStrategy = vi
+      .fn()
+      .mockResolvedValue("/tmp/reply/2026-03-27-wxid_1.md");
     const analyzer = new ReplyStrategyAnalyzer({
       weflowClient: {
         listContacts: vi.fn(),
@@ -44,6 +47,7 @@ describe("ReplyStrategyAnalyzer", () => {
       },
       fileStore: {
         getProfilePath: vi.fn().mockReturnValue(profilePath),
+        saveReplyStrategy,
       },
       codexRunner,
       resolveContact: vi.fn().mockResolvedValue({
@@ -67,10 +71,16 @@ describe("ReplyStrategyAnalyzer", () => {
       start: "",
       end: "",
       recentCount: 2,
+      date: "2026-03-27",
       cwd: process.cwd(),
     });
 
-    expect(result.markdown).toBe("## 当前局面判断");
+    expect(result.replyPath).toBe("/tmp/reply/2026-03-27-wxid_1.md");
+    expect(saveReplyStrategy).toHaveBeenCalledWith(
+      "2026-03-27",
+      "wxid_1",
+      "## 当前局面判断",
+    );
     expect(buildPrompt).toHaveBeenCalledWith({
       contactName: "Alice",
       identifierValue: "wxid_1",
@@ -98,6 +108,9 @@ describe("ReplyStrategyAnalyzer", () => {
       },
       fileStore: {
         getProfilePath: vi.fn().mockReturnValue(profilePath),
+        saveReplyStrategy: vi
+          .fn()
+          .mockResolvedValue("/tmp/reply/2026-03-27-wxid_1.md"),
       },
       codexRunner: {
         run: vi.fn().mockResolvedValue("## 当前局面判断"),
@@ -121,6 +134,7 @@ describe("ReplyStrategyAnalyzer", () => {
       start: "",
       end: "",
       recentCount: 30,
+      date: "2026-03-27",
       cwd: process.cwd(),
     });
 
@@ -139,6 +153,7 @@ describe("ReplyStrategyAnalyzer", () => {
       },
       fileStore: {
         getProfilePath: vi.fn(),
+        saveReplyStrategy: vi.fn(),
       },
       codexRunner: {
         run: vi.fn(),
@@ -161,6 +176,7 @@ describe("ReplyStrategyAnalyzer", () => {
         start: "",
         end: "",
         recentCount: 2,
+        date: "2026-03-27",
         cwd: process.cwd(),
       }),
     ).rejects.toThrow("Reply strategy requires at least one recent message.");
@@ -177,6 +193,7 @@ describe("ReplyStrategyAnalyzer", () => {
       },
       fileStore: {
         getProfilePath: vi.fn().mockReturnValue(missingProfilePath),
+        saveReplyStrategy: vi.fn(),
       },
       codexRunner: {
         run: vi.fn(),
@@ -201,6 +218,7 @@ describe("ReplyStrategyAnalyzer", () => {
         start: "",
         end: "",
         recentCount: 2,
+        date: "2026-03-27",
         cwd: process.cwd(),
       }),
     ).rejects.toThrow(/Reply strategy profile not found/);

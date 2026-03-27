@@ -37,3 +37,5 @@ pnpm --filter @chat-tools/cli dev -- generate-reply-strategy --recent-count 50
 `generate-reply-strategy` 会读取 `reply_strategy.recent_count` 作为默认最近消息条数，并支持命令行 `--recent-count` 覆盖。
 
 该命令依赖已有联系人画像；如果对应画像不存在，请先运行 `analyze-chat-profile`。
+
+命令成功后会默认保存到 `storage.reply_dir`，文件名格式为 `YYYY-MM-DD-<wxid>.md`，终端只输出保存路径。

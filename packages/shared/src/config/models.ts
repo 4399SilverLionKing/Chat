@@ -1,5 +1,6 @@
 export type StorageConfig = {
   profileDir: string;
+  replyDir: string;
   saveSanitizedChat: boolean;
   sanitizedChatDir: string;
 };

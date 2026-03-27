@@ -11,7 +11,7 @@ import {
   chooseContactIdentifier,
   collectMessages,
   resolveContact,
-} from "../src/features/chat-profile/contact-resolver.js";
+} from "../src/features/shared/contact-resolver.js";
 
 class FakeClient {
   private readonly contacts: WeFlowContact[];

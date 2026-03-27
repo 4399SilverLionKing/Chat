@@ -1,5 +1,6 @@
 [storage]
 profile_dir = "./data/profiles"
+reply_dir = "./data/reply"
 save_sanitized_chat = true
 sanitized_chat_dir = "./data/sanitized"
 

@@ -11,6 +11,7 @@ describe("FileStore", () => {
     const root = await mkdtemp(join(tmpdir(), "chat-tools-store-"));
     const store = new FileStore({
       profileDir: join(root, "profiles"),
+      replyDir: join(root, "reply"),
       sanitizedChatDir: join(root, "sanitized"),
       saveSanitizedChat: false,
     });
@@ -26,6 +27,7 @@ describe("FileStore", () => {
     const root = await mkdtemp(join(tmpdir(), "chat-tools-store-"));
     const store = new FileStore({
       profileDir: join(root, "profiles"),
+      replyDir: join(root, "reply"),
       sanitizedChatDir: join(root, "sanitized"),
       saveSanitizedChat: true,
     });
@@ -34,5 +36,24 @@ describe("FileStore", () => {
 
     expect(path).not.toBeNull();
     await expect(readFile(path!, "utf8")).resolves.toBe("我：你好");
+  });
+
+  it("writes reply markdown using date-prefixed filename", async () => {
+    const root = await mkdtemp(join(tmpdir(), "chat-tools-store-"));
+    const store = new FileStore({
+      profileDir: join(root, "profiles"),
+      replyDir: join(root, "reply"),
+      sanitizedChatDir: join(root, "sanitized"),
+      saveSanitizedChat: false,
+    });
+
+    const path = await store.saveReplyStrategy(
+      "2026-03-27",
+      "wxid_1",
+      "## 当前局面判断",
+    );
+
+    expect(path).toBe(join(root, "reply", "2026-03-27-wxid_1.md"));
+    await expect(readFile(path, "utf8")).resolves.toBe("## 当前局面判断");
   });
 });

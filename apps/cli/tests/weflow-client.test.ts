@@ -92,6 +92,33 @@ describe("WeFlowClient", () => {
     expect(String(url)).toContain("offset=40");
   });
 
+  it("preserves unsafe numeric server ids as strings when listing messages", async () => {
+    const fetcher = vi.fn().mockResolvedValue(
+      new Response(
+        '{"success":true,"talker":"wxid_1","count":1,"hasMore":false,"messages":[{"localId":1,"serverId":9007199254740993,"localType":1,"createTime":1738713600,"isSend":1,"senderUsername":"self","content":"你好"}]}',
+        { status: 200 },
+      ),
+    );
+    const client = new WeFlowClient({
+      baseUrl: "http://127.0.0.1:5031",
+      token: "token",
+      timeoutSeconds: 30,
+      fetch: fetcher,
+    });
+
+    const result = await client.listMessages({
+      talker: "wxid_1",
+      pageSize: 20,
+      offset: 0,
+      start: "",
+      end: "",
+    });
+
+    expect(result.messages[0]?.serverId).toBe("9007199254740993");
+    expect(result.messages[0]?.rawContent).toBeNull();
+    expect(result.messages[0]?.parsedContent).toBeNull();
+  });
+
   it("raises on unsuccessful http response", async () => {
     const client = new WeFlowClient({
       baseUrl: "http://127.0.0.1:5031",

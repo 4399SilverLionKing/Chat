@@ -5,17 +5,20 @@ import { StorageError } from "@chat-tools/shared";
 
 type FileStoreOptions = {
   profileDir: string;
+  replyDir: string;
   sanitizedChatDir: string;
   saveSanitizedChat: boolean;
 };
 
 export class FileStore {
   private readonly profileDir: string;
+  private readonly replyDir: string;
   private readonly sanitizedChatDir: string;
   private readonly saveSanitizedChatEnabled: boolean;
 
   constructor(options: FileStoreOptions) {
     this.profileDir = options.profileDir;
+    this.replyDir = options.replyDir;
     this.sanitizedChatDir = options.sanitizedChatDir;
     this.saveSanitizedChatEnabled = options.saveSanitizedChat;
   }
@@ -36,6 +39,16 @@ export class FileStore {
     }
 
     const path = join(this.sanitizedChatDir, `${wxid}.txt`);
+    await this.writeText(path, content);
+    return path;
+  }
+
+  async saveReplyStrategy(
+    date: string,
+    wxid: string,
+    content: string,
+  ): Promise<string> {
+    const path = join(this.replyDir, `${date}-${wxid}.md`);
     await this.writeText(path, content);
     return path;
   }

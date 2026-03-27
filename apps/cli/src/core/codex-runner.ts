@@ -52,9 +52,9 @@ export class CodexRunner {
     let completed: ExecResult;
 
     try {
-      completed = await this.exec("codex", ["exec", options.prompt], {
+      completed = await this.exec("codex", ["exec", "--sandbox", "read-only", "-"], {
         cwd: options.cwd,
-        input: options.chatText,
+        input: `${options.prompt}\n\n聊天记录：\n${options.chatText}`,
       });
     } catch (error) {
       throw new CodexExecutionError("codex command not found", { cause: error });

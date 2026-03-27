@@ -13,8 +13,8 @@ import {
 import {
   collectMessages as defaultCollectMessages,
   resolveContact as defaultResolveContact,
-} from "./contact-resolver.js";
-import { sanitizeMessages } from "./message-sanitizer.js";
+} from "../shared/contact-resolver.js";
+import { sanitizeMessages } from "../shared/message-sanitizer.js";
 import { buildChatProfilePrompt as defaultBuildChatProfilePrompt } from "./prompt-builder.js";
 
 type AnalyzerOptions = {

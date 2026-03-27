@@ -79,9 +79,18 @@ export class WeFlowClient {
       throw new WeFlowError(`WeFlow returned status ${response.status} for ${path}`);
     }
 
+    let payloadText: string;
+    try {
+      payloadText = await response.text();
+    } catch (error) {
+      throw new WeFlowError(`WeFlow returned invalid JSON for ${path}`, {
+        cause: error,
+      });
+    }
+
     let payload: unknown;
     try {
-      payload = await response.json();
+      payload = this.parseJsonPayload(payloadText);
     } catch (error) {
       throw new WeFlowError(`WeFlow returned invalid JSON for ${path}`, {
         cause: error,
@@ -98,5 +107,15 @@ export class WeFlowClient {
     }
 
     return payload;
+  }
+
+  private parseJsonPayload(payloadText: string): unknown {
+    // Preserve 64-bit message ids that would otherwise be rounded by JSON.parse.
+    const normalized = payloadText.replace(
+      /("serverId"\s*:\s*)(-?\d{16,})/g,
+      '$1"$2"',
+    );
+
+    return JSON.parse(normalized);
   }
 }

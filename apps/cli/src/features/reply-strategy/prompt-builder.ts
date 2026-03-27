@@ -19,15 +19,18 @@ type BuildReplyStrategyPromptOptions = {
 export async function buildReplyStrategyPrompt(
   options: BuildReplyStrategyPromptOptions,
 ): Promise<string> {
-  const template = (
-    await readFile(options.promptTemplatePath ?? DEFAULT_PROMPT_TEMPLATE_PATH, "utf8")
-  ).trim();
+  const [template, profileContent] = await Promise.all([
+    readFile(options.promptTemplatePath ?? DEFAULT_PROMPT_TEMPLATE_PATH, "utf8"),
+    readFile(options.profilePath, "utf8"),
+  ]);
 
   return [
-    template,
+    template.trim(),
     `目标联系人：${options.contactName}`,
     `联系人标识：${options.identifierValue}`,
     `画像文件路径：${options.profilePath}`,
+    "联系人画像内容：",
+    profileContent.trim(),
     `最近消息条数：${options.recentCount}`,
   ].join("\n\n");
 }

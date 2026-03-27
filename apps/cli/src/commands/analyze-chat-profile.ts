@@ -8,7 +8,7 @@ import { getDefaultConfigPath, loadConfig } from "../config/load-config.js";
 import { CodexRunner } from "../core/codex-runner.js";
 import { FileStore } from "../core/file-store.js";
 import { ChatProfileAnalyzer } from "../features/chat-profile/analyzer.js";
-import { chooseContactIdentifier } from "../features/chat-profile/contact-resolver.js";
+import { chooseContactIdentifier } from "../features/shared/contact-resolver.js";
 import { WeFlowClient } from "../integrations/weflow/client.js";
 
 const WORKSPACE_ROOT = resolve(
@@ -46,6 +46,7 @@ export function createDefaultAnalyzer(config: AppConfig): ChatProfileAnalyzer {
   });
   const fileStore = new FileStore({
     profileDir: config.storage.profileDir,
+    replyDir: config.storage.replyDir,
     sanitizedChatDir: config.storage.sanitizedChatDir,
     saveSanitizedChat: config.storage.saveSanitizedChat,
   });

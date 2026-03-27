@@ -12,8 +12,8 @@ import {
 import {
   collectMessages as defaultCollectMessages,
   resolveContact as defaultResolveContact,
-} from "../chat-profile/contact-resolver.js";
-import { sanitizeMessages } from "../chat-profile/message-sanitizer.js";
+} from "../shared/contact-resolver.js";
+import { sanitizeMessages } from "../shared/message-sanitizer.js";
 import { buildReplyStrategyPrompt as defaultBuildReplyStrategyPrompt } from "./prompt-builder.js";
 
 type GenerateReplyStrategyOptions = {
@@ -23,11 +23,12 @@ type GenerateReplyStrategyOptions = {
   start: string;
   end: string;
   recentCount: number;
+  date: string;
   cwd: string;
 };
 
 export type ReplyStrategyResult = {
-  markdown: string;
+  replyPath: string;
 };
 
 type ReplyStrategyAnalyzerDependencies = {
@@ -43,6 +44,7 @@ type ReplyStrategyAnalyzerDependencies = {
   };
   fileStore: {
     getProfilePath(wxid: string): string;
+    saveReplyStrategy(date: string, wxid: string, content: string): Promise<string>;
   };
   codexRunner: {
     run(options: { prompt: string; chatText: string; cwd: string }): Promise<string>;
@@ -133,8 +135,13 @@ export class ReplyStrategyAnalyzer {
       chatText: sanitizedChat,
       cwd: options.cwd,
     });
+    const replyPath = await this.fileStore.saveReplyStrategy(
+      options.date,
+      contact.wxid,
+      markdown,
+    );
 
-    return { markdown };
+    return { replyPath };
   }
 
   private normalizeMessages(messages: WeFlowMessage[]): NormalizedMessage[] {

@@ -11,11 +11,13 @@ const optionalConfigStringSchema = z.string().transform(emptyStringToNull);
 const storageSchema = z
   .object({
     profile_dir: z.string(),
+    reply_dir: z.string(),
     save_sanitized_chat: z.boolean(),
     sanitized_chat_dir: z.string(),
   })
   .transform((value) => ({
     profileDir: value.profile_dir,
+    replyDir: value.reply_dir,
     saveSanitizedChat: value.save_sanitized_chat,
     sanitizedChatDir: value.sanitized_chat_dir,
   }));

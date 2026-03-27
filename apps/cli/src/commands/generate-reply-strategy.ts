@@ -7,7 +7,7 @@ import type { AppConfig } from "@chat-tools/shared";
 import { getDefaultConfigPath, loadConfig } from "../config/load-config.js";
 import { CodexRunner } from "../core/codex-runner.js";
 import { FileStore } from "../core/file-store.js";
-import { chooseContactIdentifier } from "../features/chat-profile/contact-resolver.js";
+import { chooseContactIdentifier } from "../features/shared/contact-resolver.js";
 import { ReplyStrategyAnalyzer } from "../features/reply-strategy/analyzer.js";
 import { WeFlowClient } from "../integrations/weflow/client.js";
 
@@ -31,12 +31,14 @@ export type GenerateReplyStrategyCommandDependencies = {
       start: string;
       end: string;
       recentCount: number;
+      date: string;
       cwd: string;
-    }): Promise<{ markdown: string }>;
+    }): Promise<{ replyPath: string }>;
   };
   cwd: () => string;
   getDefaultConfigPath: () => string;
   loadConfig: (configPath: string) => Promise<AppConfig>;
+  today: () => string;
   stdout: (message: string) => void;
 };
 
@@ -50,6 +52,7 @@ export function createDefaultReplyStrategyAnalyzer(
   });
   const fileStore = new FileStore({
     profileDir: config.storage.profileDir,
+    replyDir: config.storage.replyDir,
     sanitizedChatDir: config.storage.sanitizedChatDir,
     saveSanitizedChat: config.storage.saveSanitizedChat,
   });
@@ -67,6 +70,7 @@ export const defaultGenerateReplyStrategyCommandDependencies: GenerateReplyStrat
     cwd: () => process.cwd(),
     getDefaultConfigPath: () => resolve(WORKSPACE_ROOT, getDefaultConfigPath()),
     loadConfig,
+    today: () => new Date().toISOString().slice(0, 10),
     stdout: (message: string) => {
       console.log(message);
     },
@@ -107,10 +111,11 @@ export async function runGenerateReplyStrategyCommand(
       options.recentCount,
       config.replyStrategy.recentCount,
     ),
+    date: dependencies.today(),
     cwd: dependencies.cwd(),
   });
 
-  dependencies.stdout(result.markdown);
+  dependencies.stdout(`Reply saved to: ${result.replyPath}`);
 }
 
 export function registerGenerateReplyStrategyCommand(

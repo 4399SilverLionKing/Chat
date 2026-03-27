@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { SanitizationError } from "@chat-tools/shared";
 
-import { sanitizeMessages } from "../src/features/chat-profile/message-sanitizer.js";
+import { sanitizeMessages } from "../src/features/shared/message-sanitizer.js";
 
 describe("sanitizeMessages", () => {
   it("keeps only speaker and text", () => {

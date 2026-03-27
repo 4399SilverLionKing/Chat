@@ -6,10 +6,10 @@ const weFlowContactSchema = z
   .object({
     username: z.string(),
     displayName: z.string(),
-    remark: z.string(),
-    nickname: z.string(),
-    alias: z.string().nullable(),
-    avatarUrl: z.string(),
+    remark: z.string().nullish().transform((value) => value ?? ""),
+    nickname: z.string().nullish().transform((value) => value ?? ""),
+    alias: z.string().nullish().transform((value) => value ?? null),
+    avatarUrl: z.string().nullish().transform((value) => value ?? ""),
     type: z.string(),
   })
   .transform((value) => ({
@@ -25,14 +25,14 @@ const weFlowContactSchema = z
 const weFlowMessageSchema = z
   .object({
     localId: z.number().int(),
-    serverId: z.string(),
+    serverId: z.union([z.string(), z.number()]).transform((value) => String(value)),
     localType: z.number().int(),
     createTime: z.number().int(),
     isSend: z.number().int(),
-    senderUsername: z.string().nullable(),
-    content: z.string(),
-    rawContent: z.string().nullable(),
-    parsedContent: z.string().nullable(),
+    senderUsername: z.string().nullish().transform((value) => value ?? null),
+    content: z.string().nullish().transform((value) => value ?? ""),
+    rawContent: z.string().nullish().transform((value) => value ?? null),
+    parsedContent: z.string().nullish().transform((value) => value ?? null),
   })
   .transform((value) => ({
     localId: value.localId,
