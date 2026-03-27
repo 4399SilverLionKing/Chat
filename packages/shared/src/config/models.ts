@@ -20,7 +20,12 @@ export type WeFlowConfig = {
   messages: WeFlowMessagesConfig;
 };
 
+export type ReplyStrategyConfig = {
+  recentCount: number;
+};
+
 export type AppConfig = {
   storage: StorageConfig;
   weflow: WeFlowConfig;
+  replyStrategy: ReplyStrategyConfig;
 };

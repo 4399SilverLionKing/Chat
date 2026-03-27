@@ -23,9 +23,41 @@ describe("parseAppConfig", () => {
           end: "",
         },
       },
+      reply_strategy: {
+        recent_count: 30,
+      },
     });
 
     expect(config.weflow.wxid).toBe("wxid_1");
     expect(config.weflow.wechatId).toBeNull();
+    expect(config.replyStrategy.recentCount).toBe(30);
+  });
+
+  it("rejects non-positive reply strategy recent count", () => {
+    expect(() =>
+      parseAppConfig({
+        storage: {
+          profile_dir: "./data/profiles",
+          save_sanitized_chat: false,
+          sanitized_chat_dir: "./data/sanitized",
+        },
+        weflow: {
+          base_url: "http://127.0.0.1:8080",
+          timeout_seconds: 30,
+          token: "",
+          wxid: "wxid_1",
+          wechat_id: "",
+          messages: {
+            page_size: 200,
+            max_pages: 10,
+            start: "",
+            end: "",
+          },
+        },
+        reply_strategy: {
+          recent_count: 0,
+        },
+      }),
+    ).toThrow();
   });
 });

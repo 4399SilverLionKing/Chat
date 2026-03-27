@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { isAbsolute, resolve } from "node:path";
+import { basename, dirname, isAbsolute, resolve } from "node:path";
 
 import { ConfigError, parseAppConfig } from "@chat-tools/shared";
 import { parse } from "smol-toml";
@@ -8,11 +8,11 @@ const DEFAULT_CONFIG_PATH = "config/config.toml";
 
 function projectRootFor(configPath: string): string {
   const normalized = resolve(configPath);
-  const configDir = resolve(normalized, "..");
-  const configDirName = configDir.split("/").at(-1);
+  const configDir = dirname(normalized);
+  const configDirName = basename(configDir);
 
   if (configDirName === "config") {
-    return resolve(configDir, "..");
+    return dirname(configDir);
   }
 
   return configDir;

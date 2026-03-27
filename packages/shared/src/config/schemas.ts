@@ -52,14 +52,24 @@ const weflowSchema = z
     messages: value.messages,
   }));
 
+const replyStrategySchema = z
+  .object({
+    recent_count: z.number().int().positive(),
+  })
+  .transform((value) => ({
+    recentCount: value.recent_count,
+  }));
+
 const appConfigSchema = z
   .object({
     storage: storageSchema,
     weflow: weflowSchema,
+    reply_strategy: replyStrategySchema,
   })
   .transform((value) => ({
     storage: value.storage,
     weflow: value.weflow,
+    replyStrategy: value.reply_strategy,
   }));
 
 export function parseAppConfig(input: unknown): AppConfig {

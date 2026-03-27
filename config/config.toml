@@ -1,17 +1,20 @@
 [storage]
-profile_dir = "./data/profiles"
-save_sanitized_chat = false
-sanitized_chat_dir = "./data/sanitized"
+profile_dir = "../data/profiles"
+save_sanitized_chat = true
+sanitized_chat_dir = "../data/sanitized"
 
 [weflow]
-base_url = "http://127.0.0.1:8080"
+base_url = "http://127.0.0.1:5032"
 timeout_seconds = 30
 token = ""
-wxid = ""
-wechat_id = ""
+wxid = "wxid_jubqjkwdhcbz22"
+wechat_id = "Limitedromance7"
 
 [weflow.messages]
 page_size = 200
 max_pages = 10
 start = ""
 end = ""
+
+[reply_strategy]
+recent_count = 30
