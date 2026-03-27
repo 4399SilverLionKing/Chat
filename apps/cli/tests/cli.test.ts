@@ -9,5 +9,8 @@ describe("createCli", () => {
     expect(program.commands.map((command) => command.name())).toContain(
       "analyze-chat-profile",
     );
+    expect(program.commands.map((command) => command.name())).toContain(
+      "generate-reply-strategy",
+    );
   });
 });

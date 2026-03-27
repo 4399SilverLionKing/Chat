@@ -5,9 +5,15 @@ import {
   registerAnalyzeChatProfileCommand,
   type AnalyzeChatProfileCommandDependencies,
 } from "./commands/analyze-chat-profile.js";
+import {
+  defaultGenerateReplyStrategyCommandDependencies,
+  registerGenerateReplyStrategyCommand,
+  type GenerateReplyStrategyCommandDependencies,
+} from "./commands/generate-reply-strategy.js";
 
 type CliDependencies = Partial<
-  AnalyzeChatProfileCommandDependencies & {
+  AnalyzeChatProfileCommandDependencies &
+    GenerateReplyStrategyCommandDependencies & {
     stderr: (message: string) => void;
   }
 >;
@@ -17,6 +23,10 @@ export function createCli(dependencies: CliDependencies = {}): Command {
   program.name("chat-tools");
   registerAnalyzeChatProfileCommand(program, {
     ...defaultAnalyzeChatProfileCommandDependencies,
+    ...dependencies,
+  });
+  registerGenerateReplyStrategyCommand(program, {
+    ...defaultGenerateReplyStrategyCommandDependencies,
     ...dependencies,
   });
   return program;
