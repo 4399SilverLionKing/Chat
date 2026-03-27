@@ -46,14 +46,17 @@
 示例：
 
 ```bash
-python -m app.cli analyze-chat-profile --wxid wxid_xxx --config ./config/config.toml
-python -m app.cli analyze-chat-profile --wechat-id my_wechat_id --config ./config/config.toml
+python -m app.cli analyze-chat-profile
+python -m app.cli analyze-chat-profile --wxid wxid_xxx
+python -m app.cli analyze-chat-profile --wechat-id my_wechat_id
 ```
 
 约束：
 
-- `--wxid` 与 `--wechat-id` 必须二选一
-- `--config` 可选；未传入时使用默认配置路径
+- `--wxid` 与 `--wechat-id` 均为可选
+- 若命令行未传入联系人标识，则使用默认 TOML 配置中的联系人配置
+- 若命令行和 TOML 都未提供可用联系人标识，则直接报错中断
+- 命令行传入时覆盖 TOML 中的联系人配置
 - 当前命令一次只处理一个联系人
 
 ## 4. 配置设计
@@ -71,9 +74,9 @@ sanitized_chat_dir = "./data/sanitized"
 [weflow]
 base_url = "http://127.0.0.1:8080"
 timeout_seconds = 30
-
-[weflow.auth]
 token = ""
+wxid = ""
+wechat_id = ""
 
 [weflow.messages]
 page_size = 200
@@ -89,7 +92,9 @@ end = ""
 - `storage.sanitized_chat_dir`：清洗文本保存目录
 - `weflow.base_url`：WeFlow 服务地址
 - `weflow.timeout_seconds`：请求超时时间
-- `weflow.auth.token`：访问令牌
+- `weflow.token`：访问令牌
+- `weflow.wxid`：默认联系人 `wxid`
+- `weflow.wechat_id`：默认联系人微信号
 - `weflow.messages.page_size`：单页消息数量
 - `weflow.messages.max_pages`：最多拉取页数
 - `weflow.messages.start`：开始时间，支持 `YYYYMMDD` 或时间戳
@@ -97,7 +102,8 @@ end = ""
 
 说明：
 
-- 联系人标识不放在配置中，必须由 CLI 显式传入
+- 若命令行未传入联系人标识，则读取 TOML 中的 `weflow.wxid` 或 `weflow.wechat_id`
+- TOML 同时存在 `weflow.wxid` 和 `weflow.wechat_id` 时，优先使用 `weflow.wxid`
 - 输出语言固定为中文，不配置
 - `codex exec` 调用参数先由实现内置，后续如确有需要再开放配置
 
@@ -154,15 +160,19 @@ data/
 单次分析流程如下：
 
 1. CLI 读取命令参数与 TOML 配置
-2. 根据 `wxid` 或微信号调用联系人解析逻辑
-3. 联系人解析逻辑通过 WeFlow `/api/v1/contacts` 找到目标联系人
-4. 使用联系人对应的会话标识调用 WeFlow `/api/v1/messages`
-5. 请求消息时带上配置中的 `page_size`、`max_pages`、`start`、`end`
-6. 清洗消息，仅保留双方说话内容
-7. 检查该联系人是否已有旧画像文件
-8. 构建 prompt，并将清洗后的聊天内容传给 `codex exec`
-9. 获取 Codex 输出，覆盖写入联系人画像文件
-10. 如开启 `save_sanitized_chat`，额外保存清洗后的聊天文本
+2. 先按 `命令行参数 > TOML 配置` 决定联系人输入来源
+3. 若最终同时存在 `wxid` 与微信号，则优先使用 `wxid`
+4. 根据最终选定的 `wxid` 或微信号调用联系人解析逻辑
+5. 若命令行和 TOML 都未提供联系人标识，则直接报错中断
+6. 联系人解析逻辑通过 WeFlow `/api/v1/contacts` 找到目标联系人
+7. 若找不到目标联系人，则直接报错中断
+8. 使用联系人对应的会话标识调用 WeFlow `/api/v1/messages`
+9. 请求消息时带上配置中的 `page_size`、`max_pages`、`start`、`end`
+10. 清洗消息，仅保留双方说话内容
+11. 检查该联系人是否已有旧画像文件
+12. 构建 prompt，并将清洗后的聊天内容传给 `codex exec`
+13. 获取 Codex 输出，覆盖写入联系人画像文件
+14. 如开启 `save_sanitized_chat`，额外保存清洗后的聊天文本
 
 ## 7. 联系人与文件命名规则
 
@@ -173,8 +183,12 @@ data/
 
 解析策略：
 
+- 联系人输入来源优先级为：命令行 `--wxid` / `--wechat-id` > TOML 配置
+- 若命令行未传入，则从 TOML 中读取 `weflow.wxid` 或 `weflow.wechat_id`
+- TOML 内部若同时配置两者，优先使用 `weflow.wxid`
 - 若传入 `--wxid`，优先按联系人 `username` 精确匹配
 - 若传入 `--wechat-id`，按联系人 `alias` 精确匹配
+- 若最终没有任何可用联系人标识，直接报错
 - 若未匹配到联系人，直接报错
 - 若匹配结果异常不唯一，直接报错，不做模糊选择
 
