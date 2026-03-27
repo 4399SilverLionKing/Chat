@@ -1,0 +1,7 @@
+dist
+node_modules
+.DS_Store
+ts/.pnpm-store
+ts/coverage
+ts/apps/*/dist
+ts/packages/*/dist
