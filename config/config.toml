@@ -1,7 +1,7 @@
 [storage]
-profile_dir = "../data/profiles"
+profile_dir = "./data/profiles"
 save_sanitized_chat = true
-sanitized_chat_dir = "../data/sanitized"
+sanitized_chat_dir = "./data/sanitized"
 
 [weflow]
 base_url = "http://127.0.0.1:5032"

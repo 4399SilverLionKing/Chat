@@ -7,6 +7,19 @@ import { describe, expect, it } from "vitest";
 import { buildChatProfilePrompt } from "../src/features/chat-profile/prompt-builder.js";
 
 describe("buildChatProfilePrompt", () => {
+  it("uses the repo prompt template by default", async () => {
+    const prompt = await buildChatProfilePrompt({
+      contactName: "Alice",
+      identifierValue: "wxid_1",
+      oldProfilePath: null,
+    });
+
+    expect(prompt).toContain("请基于提供的聊天记录，生成一份偏“暧昧 / 恋爱互动分析”方向的联系人画像。");
+    expect(prompt).toContain("Chat\\skills\\love_chat_summary.md");
+    expect(prompt).toContain("目标联系人：Alice");
+    expect(prompt).toContain("联系人标识：wxid_1");
+  });
+
   it("mentions required sections and old profile path", async () => {
     const root = await mkdtemp(join(tmpdir(), "chat-tools-prompt-"));
     const promptsDir = join(root, "prompts");

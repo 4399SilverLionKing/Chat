@@ -5,7 +5,7 @@ import { CodexExecutionError } from "@chat-tools/shared";
 import { CodexRunner } from "../src/core/codex-runner.js";
 
 describe("CodexRunner", () => {
-  it("passes prompt and chat text to codex exec", async () => {
+  it("passes the full request through stdin to codex exec", async () => {
     const exec = vi.fn().mockResolvedValue({
       exitCode: 0,
       stderr: "",
@@ -20,10 +20,14 @@ describe("CodexRunner", () => {
     });
 
     expect(output).toBe("# profile");
-    expect(exec).toHaveBeenCalledWith("codex", ["exec", "analyze"], {
+    expect(exec).toHaveBeenCalledWith(
+      "codex",
+      ["exec", "--sandbox", "read-only", "-"],
+      {
       cwd: process.cwd(),
-      input: "我：你好",
-    });
+      input: "analyze\n\n聊天记录：\n我：你好",
+      },
+    );
   });
 
   it("raises on non-zero exit", async () => {
