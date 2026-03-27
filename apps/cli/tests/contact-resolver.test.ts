@@ -76,11 +76,27 @@ describe("resolveContact", () => {
     expect(resolved.wechatId).toBe("alice");
   });
 
+  it("falls back to the provided wxid when contacts are missing", async () => {
+    const client = new FakeClient({ contacts: [] });
+
+    const resolved = await resolveContact(
+      client,
+      new ContactIdentifier({ wxid: "wxid_404" }),
+    );
+
+    expect(resolved).toEqual({
+      wxid: "wxid_404",
+      wechatId: null,
+      displayName: "wxid_404",
+      talker: "wxid_404",
+    });
+  });
+
   it("raises when contact is not found", async () => {
     const client = new FakeClient({ contacts: [] });
 
     await expect(
-      resolveContact(client, new ContactIdentifier({ wxid: "wxid_404" })),
+      resolveContact(client, new ContactIdentifier({ wechatId: "alice404" })),
     ).rejects.toBeInstanceOf(ContactResolutionError);
   });
 });

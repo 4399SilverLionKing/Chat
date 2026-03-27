@@ -2,7 +2,7 @@
 
 分析时请参考工作区文件：
 
-- `Chat\skills\love_chat_summary.md`
+- `Chat\.agents\skills\love-chat-coach\SKILL.md`
 
 尤其吸收其中这些原则：
 

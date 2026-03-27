@@ -4,7 +4,7 @@
 
 分析时请重点吸收以下信息来源：
 
-- `Chat\skills\love_chat_summary.md`
+- `Chat\.agents\skills\love-chat-coach\SKILL.md`
 - prompt 里已经直接提供的联系人画像正文
 
 要求：

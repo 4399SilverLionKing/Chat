@@ -27,6 +27,7 @@ describe("buildReplyStrategyPrompt", () => {
     expect(prompt).toContain("请基于提供的最近聊天记录");
     expect(prompt).toContain("温和陪练");
     expect(prompt).toContain("冷静拆局");
+    expect(prompt).toContain("Chat\\.agents\\skills\\love-chat-coach\\SKILL.md");
     expect(prompt).toContain("目标联系人：Alice");
     expect(prompt).toContain("联系人标识：wxid_1");
     expect(prompt).toContain(`画像文件路径：${profilePath}`);

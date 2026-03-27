@@ -10,10 +10,22 @@ import {
   registerGenerateReplyStrategyCommand,
   type GenerateReplyStrategyCommandDependencies,
 } from "./commands/generate-reply-strategy.js";
+import {
+  defaultFetchChatContextCommandDependencies,
+  registerFetchChatContextCommand,
+  type FetchChatContextCommandDependencies,
+} from "./commands/fetch-chat-context.js";
+import {
+  defaultShowContactCommandDependencies,
+  registerShowContactCommand,
+  type ShowContactCommandDependencies,
+} from "./commands/show-contact.js";
 
 type CliDependencies = Partial<
   AnalyzeChatProfileCommandDependencies &
-    GenerateReplyStrategyCommandDependencies & {
+    FetchChatContextCommandDependencies &
+    GenerateReplyStrategyCommandDependencies &
+    ShowContactCommandDependencies & {
     stderr: (message: string) => void;
   }
 >;
@@ -27,6 +39,14 @@ export function createCli(dependencies: CliDependencies = {}): Command {
   });
   registerGenerateReplyStrategyCommand(program, {
     ...defaultGenerateReplyStrategyCommandDependencies,
+    ...dependencies,
+  });
+  registerFetchChatContextCommand(program, {
+    ...defaultFetchChatContextCommandDependencies,
+    ...dependencies,
+  });
+  registerShowContactCommand(program, {
+    ...defaultShowContactCommandDependencies,
     ...dependencies,
   });
   return program;

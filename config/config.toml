@@ -8,8 +8,8 @@ sanitized_chat_dir = "./data/sanitized"
 base_url = "http://127.0.0.1:5032"
 timeout_seconds = 30
 token = ""
-wxid = "wxid_jubqjkwdhcbz22"
-wechat_id = "Limitedromance7"
+wxid = "wxid_ag2pixn1lbtk22"
+wechat_id = "kkkkkk"
 
 [weflow.messages]
 page_size = 200

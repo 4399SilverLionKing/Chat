@@ -52,6 +52,15 @@ export async function resolveContact(
   });
 
   if (matches.length === 0) {
+    if (identifier.wxid) {
+      return {
+        wxid: identifier.wxid,
+        wechatId: null,
+        displayName: identifier.wxid,
+        talker: identifier.wxid,
+      };
+    }
+
     throw new ContactResolutionError(`Contact not found: ${identifier.preferredValue}`);
   }
   if (matches.length > 1) {
