@@ -1,6 +1,5 @@
 export type StorageConfig = {
   profileDir: string;
-  replyDir: string;
   saveSanitizedChat: boolean;
   sanitizedChatDir: string;
 };
@@ -21,12 +20,7 @@ export type WeFlowConfig = {
   messages: WeFlowMessagesConfig;
 };
 
-export type ReplyStrategyConfig = {
-  recentCount: number;
-};
-
 export type AppConfig = {
   storage: StorageConfig;
   weflow: WeFlowConfig;
-  replyStrategy: ReplyStrategyConfig;
 };

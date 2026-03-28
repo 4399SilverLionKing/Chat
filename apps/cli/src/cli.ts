@@ -6,11 +6,6 @@ import {
   type AnalyzeChatProfileCommandDependencies,
 } from "./commands/analyze-chat-profile.js";
 import {
-  defaultGenerateReplyStrategyCommandDependencies,
-  registerGenerateReplyStrategyCommand,
-  type GenerateReplyStrategyCommandDependencies,
-} from "./commands/generate-reply-strategy.js";
-import {
   defaultFetchChatContextCommandDependencies,
   registerFetchChatContextCommand,
   type FetchChatContextCommandDependencies,
@@ -24,7 +19,6 @@ import {
 type CliDependencies = Partial<
   AnalyzeChatProfileCommandDependencies &
     FetchChatContextCommandDependencies &
-    GenerateReplyStrategyCommandDependencies &
     ShowContactCommandDependencies & {
     stderr: (message: string) => void;
   }
@@ -35,10 +29,6 @@ export function createCli(dependencies: CliDependencies = {}): Command {
   program.name("chat-tools");
   registerAnalyzeChatProfileCommand(program, {
     ...defaultAnalyzeChatProfileCommandDependencies,
-    ...dependencies,
-  });
-  registerGenerateReplyStrategyCommand(program, {
-    ...defaultGenerateReplyStrategyCommandDependencies,
     ...dependencies,
   });
   registerFetchChatContextCommand(program, {

@@ -7,7 +7,6 @@ describe("parseAppConfig", () => {
     const config = parseAppConfig({
       storage: {
         profile_dir: "./data/profiles",
-        reply_dir: "./data/reply",
         save_sanitized_chat: false,
         sanitized_chat_dir: "./data/sanitized",
       },
@@ -24,18 +23,15 @@ describe("parseAppConfig", () => {
           end: "",
         },
       },
-      reply_strategy: {
-        recent_count: 30,
-      },
     });
 
     expect(config.weflow.wxid).toBe("wxid_1");
     expect(config.weflow.wechatId).toBeNull();
-    expect(config.storage.replyDir).toBe("./data/reply");
-    expect(config.replyStrategy.recentCount).toBe(30);
+    expect(config.storage.profileDir).toBe("./data/profiles");
+    expect(config.storage.sanitizedChatDir).toBe("./data/sanitized");
   });
 
-  it("rejects non-positive reply strategy recent count", () => {
+  it("rejects storage config that still includes removed reply_dir", () => {
     expect(() =>
       parseAppConfig({
         storage: {
@@ -56,9 +52,6 @@ describe("parseAppConfig", () => {
             start: "",
             end: "",
           },
-        },
-        reply_strategy: {
-          recent_count: 0,
         },
       }),
     ).toThrow();

@@ -46,7 +46,6 @@ export function createDefaultAnalyzer(config: AppConfig): ChatProfileAnalyzer {
   });
   const fileStore = new FileStore({
     profileDir: config.storage.profileDir,
-    replyDir: config.storage.replyDir,
     sanitizedChatDir: config.storage.sanitizedChatDir,
     saveSanitizedChat: config.storage.saveSanitizedChat,
   });

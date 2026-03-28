@@ -3,14 +3,13 @@ import { describe, expect, it } from "vitest";
 import { createCli } from "../src/cli.js";
 
 describe("createCli", () => {
-  it("registers analyze-chat-profile command", () => {
+  it("registers only the supported CLI commands", () => {
     const program = createCli();
+    const commandNames = program.commands.map((command) => command.name());
 
-    expect(program.commands.map((command) => command.name())).toContain(
-      "analyze-chat-profile",
-    );
-    expect(program.commands.map((command) => command.name())).toContain(
-      "generate-reply-strategy",
-    );
+    expect(commandNames).toContain("analyze-chat-profile");
+    expect(commandNames).toContain("fetch-chat-context");
+    expect(commandNames).toContain("show-contact");
+    expect(commandNames).not.toContain("generate-reply-strategy");
   });
 });

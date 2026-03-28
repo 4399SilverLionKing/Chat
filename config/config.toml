@@ -1,6 +1,5 @@
 [storage]
 profile_dir = "./data/profiles"
-reply_dir = "./data/reply"
 save_sanitized_chat = true
 sanitized_chat_dir = "./data/sanitized"
 
@@ -16,6 +15,3 @@ page_size = 200
 max_pages = 10
 start = ""
 end = ""
-
-[reply_strategy]
-recent_count = 30

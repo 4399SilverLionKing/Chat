@@ -6,7 +6,6 @@
     "build": "pnpm -r build",
     "dev": "pnpm --filter @chat-tools/cli dev",
     "analyze": "pnpm --filter @chat-tools/cli dev -- analyze-chat-profile",
-    "reply": "pnpm --filter @chat-tools/cli dev -- generate-reply-strategy",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"

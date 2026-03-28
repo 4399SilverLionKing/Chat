@@ -6,7 +6,6 @@ function makeConfig() {
   return {
     storage: {
       profileDir: "/tmp/profiles",
-      replyDir: "/tmp/reply",
       saveSanitizedChat: false,
       sanitizedChatDir: "/tmp/sanitized",
     },
@@ -22,9 +21,6 @@ function makeConfig() {
         start: "",
         end: "",
       },
-    },
-    replyStrategy: {
-      recentCount: 30,
     },
   };
 }
