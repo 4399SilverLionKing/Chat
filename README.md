@@ -14,6 +14,7 @@
 - `show-contact`：解析联系人并输出结构化 JSON
 - `fetch-chat-context`：获取最近聊天或指定时间范围内的聊天上下文
 - `analyze-chat-profile`：基于聊天记录生成联系人画像
+- Web 批量画像页面：从 WeFlow 拉全部联系人，勾选后串行批量跑画像生成
 - 项目级 Codex skills：在仓库内直接组织“联系人确认 -> 聊天取证 -> 分析/建议”的工作流
 
 ## 仓库结构
@@ -47,8 +48,15 @@ pnpm install
 pnpm --filter @chat-tools/cli dev -- show-contact
 pnpm --filter @chat-tools/cli dev -- fetch-chat-context --recent-count 50
 pnpm analyze
+pnpm dev:web-server
+pnpm dev:web
 codex
 ```
+
+其中：
+
+- `pnpm dev:web-server`：启动本地 API，负责读取联系人和串行触发 CLI
+- `pnpm dev:web`：启动前端页面，默认通过 Vite 代理访问本地 API
 
 ## 详细教程
 

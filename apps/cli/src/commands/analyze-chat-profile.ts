@@ -3,13 +3,13 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { AppConfig } from "@chat-tools/shared";
+import { WeFlowClient } from "@chat-tools/weflow-client";
 
 import { getDefaultConfigPath, loadConfig } from "../config/load-config.js";
 import { CodexRunner } from "../core/codex-runner.js";
 import { FileStore } from "../core/file-store.js";
 import { ChatProfileAnalyzer } from "../features/chat-profile/analyzer.js";
 import { chooseContactIdentifier } from "../features/shared/contact-resolver.js";
-import { WeFlowClient } from "../integrations/weflow/client.js";
 
 const WORKSPACE_ROOT = resolve(
   dirname(fileURLToPath(import.meta.url)),

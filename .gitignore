@@ -1,4 +1,5 @@
 dist
+dist-server
 data
 node_modules
 .DS_Store

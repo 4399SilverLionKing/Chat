@@ -8,7 +8,7 @@ import {
 
 type FetchLike = typeof fetch;
 
-type WeFlowClientOptions = {
+export type WeFlowClientOptions = {
   baseUrl: string;
   token: string;
   timeoutSeconds: number;
@@ -22,6 +22,8 @@ type ListMessagesOptions = {
   start: string;
   end: string;
 };
+
+const CONTACT_LIST_LIMIT = 5000;
 
 export class WeFlowClient {
   private readonly baseUrl: string;
@@ -37,7 +39,7 @@ export class WeFlowClient {
   }
 
   async listContacts(): Promise<WeFlowContact[]> {
-    const payload = await this.getJson("/api/v1/contacts");
+    const payload = await this.getJson(`/api/v1/contacts?limit=${CONTACT_LIST_LIMIT}`);
     return parseWeFlowContactsResponse(payload).contacts;
   }
 
@@ -110,7 +112,6 @@ export class WeFlowClient {
   }
 
   private parseJsonPayload(payloadText: string): unknown {
-    // Preserve 64-bit message ids that would otherwise be rounded by JSON.parse.
     const normalized = payloadText.replace(
       /("serverId"\s*:\s*)(-?\d{16,})/g,
       '$1"$2"',

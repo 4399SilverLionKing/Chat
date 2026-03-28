@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import type { AppConfig, ResolvedContact, WeFlowMessage } from "@chat-tools/shared";
 import { normalizeMessageText } from "@chat-tools/shared";
+import { WeFlowClient } from "@chat-tools/weflow-client";
 
 import { getDefaultConfigPath, loadConfig } from "../config/load-config.js";
 import {
@@ -12,7 +13,6 @@ import {
   resolveContact,
 } from "../features/shared/contact-resolver.js";
 import { sanitizeMessages } from "../features/shared/message-sanitizer.js";
-import { WeFlowClient } from "../integrations/weflow/client.js";
 
 const WORKSPACE_ROOT = resolve(
   dirname(fileURLToPath(import.meta.url)),

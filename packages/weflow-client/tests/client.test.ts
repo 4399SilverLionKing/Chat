@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 
 import { WeFlowError } from "@chat-tools/shared";
 
-import { WeFlowClient } from "../src/integrations/weflow/client.js";
+import { WeFlowClient } from "../src/client.js";
 
 describe("WeFlowClient", () => {
-  it("uses bearer token when listing contacts", async () => {
+  it("uses bearer token and explicit limit when listing contacts", async () => {
     const fetcher = vi.fn().mockResolvedValue(
       new Response(
         JSON.stringify({
@@ -19,9 +19,9 @@ describe("WeFlowClient", () => {
               nickname: "Alice",
               alias: "alice",
               avatarUrl: "",
-              type: "friend",
-            },
-          ],
+              type: "friend"
+            }
+          ]
         }),
         { status: 200 },
       ),
@@ -37,7 +37,7 @@ describe("WeFlowClient", () => {
 
     expect(contacts[0]?.username).toBe("wxid_1");
     expect(fetcher).toHaveBeenCalledWith(
-      "http://127.0.0.1:5031/api/v1/contacts",
+      "http://127.0.0.1:5031/api/v1/contacts?limit=5000",
       expect.objectContaining({
         headers: expect.objectContaining({
           Authorization: "Bearer token",
@@ -64,9 +64,9 @@ describe("WeFlowClient", () => {
               senderUsername: "self",
               content: "你好",
               rawContent: "你好",
-              parsedContent: "你好",
-            },
-          ],
+              parsedContent: "你好"
+            }
+          ]
         }),
         { status: 200 },
       ),
@@ -90,6 +90,8 @@ describe("WeFlowClient", () => {
     const [url] = fetcher.mock.calls[0] ?? [];
     expect(String(url)).toContain("limit=20");
     expect(String(url)).toContain("offset=40");
+    expect(String(url)).toContain("start=20260101");
+    expect(String(url)).toContain("end=20260131");
   });
 
   it("preserves unsafe numeric server ids as strings when listing messages", async () => {

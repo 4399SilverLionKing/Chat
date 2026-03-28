@@ -39,11 +39,15 @@ pnpm build
 pnpm test
 pnpm typecheck
 pnpm analyze
+pnpm dev:web-server
+pnpm dev:web
 ```
 
 其中：
 
 - `pnpm analyze` 等价于运行 `analyze-chat-profile`
+- `pnpm dev:web-server` 用于启动批量画像页面的本地 API
+- `pnpm dev:web` 用于启动批量画像页面前端
 
 ## 5. 配置说明
 
@@ -164,7 +168,26 @@ codex
 
 如果最近聊天证据已经足够，项目级 `reply-strategy-coach` 会直接给出即时建议；只有问题明显依赖长期互动模式时，才需要参考已有画像。
 
-## 7. 常用命令详解
+## 7. 本地 Web 批量画像页面
+
+如果你希望用页面勾选联系人后批量生成画像，可以在仓库根目录分别启动：
+
+```bash
+pnpm dev:web-server
+pnpm dev:web
+```
+
+启动后：
+
+1. 页面会从 WeFlow 拉取全部联系人
+2. 你可以按 `displayName`、备注、昵称、`wechatId`、`wxid` 搜索
+3. 通过复选框批量选择目标联系人
+4. 点击“开始生成画像”后，页面会串行调用现有 CLI
+5. 每个联系人的 `待运行 / 运行中 / 成功 / 失败`、日志摘要和画像输出路径都会显示在右侧面板
+
+这个页面是本地工具页，不是部署型后台。它依赖本地 API 服务来读取配置和拉起 CLI，所以前端和 server 需要一起运行。
+
+## 8. 常用命令详解
 
 ### `show-contact`
 
@@ -206,7 +229,7 @@ codex
 - 你想知道“这句怎么回更自然”
 - 你希望拿到几条可以直接发的回复版本
 
-## 8. 在 Codex 中使用这个仓库
+## 9. 在 Codex 中使用这个仓库
 
 仓库根目录已经提供了：
 
@@ -234,7 +257,7 @@ codex
 
 如果你是作为仓库使用者而不是 Codex 使用者，也可以完全跳过这部分，只用 CLI。
 
-## 9. 推荐工作流
+## 10. 推荐工作流
 
 ### 纯 CLI 工作流
 
@@ -264,7 +287,21 @@ pnpm --filter @chat-tools/cli dev -- analyze-chat-profile --wechat-id my_wechat_
 - 你想让分析结论更明确地建立在聊天证据上
 - 你希望项目级规则自动约束输出风格
 
-## 10. 输出目录与产物
+### Web 批处理工作流
+
+1. 启动 `pnpm dev:web-server`
+2. 启动 `pnpm dev:web`
+3. 在页面里搜索并勾选联系人
+4. 一键触发批量画像生成
+5. 在右侧任务面板观察串行执行状态和输出路径
+
+适合：
+
+- 你这次主要是批量生成画像，不想手工逐个敲命令
+- 你需要直接看到每个角色的执行结果
+- 你想把 CLI 保留为底层能力，但把批量编排交给 UI
+
+## 11. 输出目录与产物
 
 默认情况下，常见产物都在 `data/` 下：
 
@@ -273,7 +310,7 @@ pnpm --filter @chat-tools/cli dev -- analyze-chat-profile --wechat-id my_wechat_
 
 如果修改了 `config/config.toml` 里的 `storage.*` 字段，输出目录会随之变化。
 
-## 11. 常见问题
+## 12. 常见问题
 
 ### 没传 `--wxid` 或 `--wechat-id` 还能运行吗？
 
@@ -294,3 +331,7 @@ pnpm --filter @chat-tools/cli dev -- analyze-chat-profile --wechat-id my_wechat_
 - 联系人标识是否正确
 - WeFlow 服务是否可访问
 - 时间范围、分页和最近消息条数是否设置得过于严格
+
+### Web 页面为什么不能单独开？
+
+因为页面本身不会直接读取本地配置，也不会直接起 CLI 进程。联系人读取和批量执行都在本地 API 服务里，所以需要和 `pnpm dev:web-server` 配套运行。

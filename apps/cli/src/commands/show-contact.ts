@@ -3,10 +3,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { AppConfig, ResolvedContact } from "@chat-tools/shared";
+import { WeFlowClient } from "@chat-tools/weflow-client";
 
 import { getDefaultConfigPath, loadConfig } from "../config/load-config.js";
 import { chooseContactIdentifier, resolveContact } from "../features/shared/contact-resolver.js";
-import { WeFlowClient } from "../integrations/weflow/client.js";
 
 const WORKSPACE_ROOT = resolve(
   dirname(fileURLToPath(import.meta.url)),

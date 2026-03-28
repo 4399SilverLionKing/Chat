@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    font-family:
+      "Avenir Next",
+      "Segoe UI Variable",
+      "PingFang SC",
+      "Hiragino Sans GB",
+      "Microsoft YaHei",
+      sans-serif;
+    color: #29231a;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #fffdf8;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .tool-button {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .tool-button-primary {
+    @apply bg-stone-950 text-white shadow-[0_16px_40px_-24px_rgba(0,0,0,0.65)] hover:bg-stone-800;
+  }
+
+  .tool-button-muted {
+    @apply bg-stone-100 text-stone-700 ring-1 ring-stone-200 hover:bg-stone-200;
+  }
+}

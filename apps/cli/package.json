@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@chat-tools/shared": "workspace:*",
+    "@chat-tools/weflow-client": "workspace:*",
     "commander": "^14.0.0",
     "execa": "^9.6.0",
     "smol-toml": "^1.4.1"
